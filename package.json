@@ -2,7 +2,7 @@
   "name": "DS-PluS",
   "version": "0.0.1",
   "author": "Daniel Schüch <dschuehc@gmail.com>",
-  "description": "Plugin-Based Archtiecture for OS, Backend & Frontend | Boilerplate by Can Pekesen",
+  "description": "Plugin-Based Architecture for OS, Backend & Frontend | Boilerplate by Can Pekesen",
   "keywords": [
     "express",
     "gulp",
