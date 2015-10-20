@@ -1,0 +1,28 @@
+{
+  "server": {
+    "port": 8080,
+    "path": "server",
+    "modules": [
+      {"module": "static", "file": "modules/static"},
+      {"module": "local-signup", "file": "modules/local-signup"},
+      {"module": "local-signin", "file": "modules/local-signin"},
+      {"module": "angular", "file": "modules/angular"}
+    ],
+    "extensions": [
+      {"extension": "userModel", "file": "extensions/usermodel"},
+      {"extension": "passport", "file": "extensions/passport"},
+      {"extension": "passport-local", "file": "extensions/passport-local"}
+    ]
+  },
+  "translations": {
+    "path": "../app/misc/i18n"
+  },
+  "databases": {
+    "user": "mongodb://localhost:27017/userDatabase"
+  },
+  "userModel": {
+    "salt_work_factor": 13,
+    "max_login_attempts": 5,
+    "lock_time_10_min": 600000
+  }
+}
