@@ -22,13 +22,6 @@ function UserModel(config, mongoose) {
       local: {
         password: String
       },
-      facebook: {
-        id: {type: String, index: {unique: false}},
-        token: String,
-        email: String,
-        name: String,
-        surname: String
-      },
       loginAttempts: {type: Number, required: true, default: 0},
       lockUntil: {type: Number}
     },

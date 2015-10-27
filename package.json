@@ -93,7 +93,6 @@
     "mongoose": "4.1.9",
     "morgan": "1.5.3",
     "passport": "0.3.0",
-    "passport-facebook": "2.0.0",
     "passport-local": "1.0.0",
     "q-io": "1.13.1",
     "tiny-di": "0.1.0"
