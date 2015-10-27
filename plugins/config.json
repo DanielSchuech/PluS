@@ -3,6 +3,10 @@
     {
       "name": "express",
       "enabled": true
+    },
+    {
+      "name": "testpage",
+      "enabled": true
     }  
   ]
 }
