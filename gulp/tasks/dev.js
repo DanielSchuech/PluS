@@ -10,6 +10,6 @@ gulp.task('dev', ['clean'], function(cb) {
   global.isProd = false;
 
   runSequence('bootstrap', 'nodeScripts', 'styles', 'images',
-    'views', 'misc', 'transform', 'watch', 'server', 'pluginSystem', cb);
+    'views', 'misc', 'transform', 'watch', 'server', cb);
 
 });

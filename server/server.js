@@ -1,21 +1,34 @@
 'use strict';
 
-var http       = require('http');
-var express    = require('express');
-var morgan     = require('morgan');
+var http = require('http');
+var express = require('express');
+var morgan = require('morgan');
 var bodyParser = require('body-parser');
-var path       = require('path');
-var tiny       = require('tiny-di');
-var fs         = require('q-io/fs');
+var path = require('path');
+var tiny = require('tiny-di');
+var fs = require('q-io/fs');
 var mongoose = require('mongoose');
 var session = require('express-session');
 var passport = require('passport');
+var MongoStore = require('connect-mongo')(session);
 
 var sessionSecret = require('./sessionsecret');
 
 module.exports = Daemon;
 
 function Daemon(logFunc, config) {
+  var sessionStore = new MongoStore({ url: config.databases.user});
+
+  // Passport does not directly manage your session, it only uses the session.
+  // So you configure session attributes (e.g. life of your session) via express
+  var sessionOpts = {
+    saveUninitialized: true, // saved new sessions
+    resave: false, // do not automatically write to the session store
+    store: sessionStore,
+    secret: sessionSecret,
+    cookie : { httpOnly: true, maxAge: config.session.maxAge } // configure when sessions expires
+  };
+
   // Prepare dependency injection
   var $injector = new tiny();
   $injector.bind('$injector').to($injector);
@@ -29,11 +42,7 @@ function Daemon(logFunc, config) {
   server.use(bodyParser.urlencoded({
     extended: true
   }));
-  server.use(session({
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: false
-  }));
+  server.use(session(sessionOpts));
   server.use(passport.initialize());
   server.use(passport.session());
 
@@ -53,7 +62,8 @@ function Daemon(logFunc, config) {
     .bind('server').to(server)
     .bind('filesystem').to(fs)
     .bind('logFunc').to(logFunc)
-    .bind('passport').to(passport);
+    .bind('passport').to(passport)
+    .bind('mongoose').to(mongoose);
 
   // Load all modules, specified in gulp/config.js (server.modules)
   loadExtensions();

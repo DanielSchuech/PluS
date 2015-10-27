@@ -5,7 +5,7 @@ require('livereload-js');
 // Angular
 require('angular');
 
-require('./templatecache.js');
+require('./templateCache');
 require('./translation');
 
 // create and bootstrap application

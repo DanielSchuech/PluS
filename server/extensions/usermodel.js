@@ -1,5 +1,3 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 var bcrypt = require('bcrypt');
 var SALT_WORK_FACTOR;
 var MAX_LOGIN_ATTEMPTS;
@@ -7,23 +5,29 @@ var LOCK_TIME;
 
 module.exports = UserModel;
 
-UserModel.$inject = ['config'];
-function UserModel(config) {
+UserModel.$inject = ['config', 'mongoose'];
+function UserModel(config, mongoose) {
   SALT_WORK_FACTOR = config.userModel.salt_work_factor;
   MAX_LOGIN_ATTEMPTS = config.userModel.max_login_attempts;
   LOCK_TIME = config.userModel.lock_time_10_min;
 
+  var Schema = mongoose.Schema;
+
   var UserSchema = new Schema({
 
       email: {type: String, required: true, index: {unique: true}},
+      name: String,
+      surname: String,
+
       local: {
         password: String
       },
       facebook: {
-        id: String,
+        id: {type: String, index: {unique: false}},
         token: String,
         email: String,
-        name: String
+        name: String,
+        surname: String
       },
       loginAttempts: {type: Number, required: true, default: 0},
       lockUntil: {type: Number}
@@ -37,7 +41,6 @@ function UserModel(config) {
 
   UserSchema.pre('save', function (next) {
     var user = this;
-
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('local.password')) return next();
 
@@ -46,18 +49,18 @@ function UserModel(config) {
       if (err) return next(err);
 
       // hash the password using our new salt
-      bcrypt.hash(user.password, salt, function (err, hash) {
+      bcrypt.hash(user.local.password, salt, function (err, hash) {
         if (err) return next(err);
 
         // set the hashed password back on our user document
-        user.password = hash;
+        user.local.password = hash;
         return next();
       });
     });
   });
 
   UserSchema.methods.comparePassword = function (candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+    bcrypt.compare(candidatePassword, this.local.password, function (err, isMatch) {
       if (err) return cb(err);
       cb(null, isMatch);
     });
@@ -82,9 +85,11 @@ function UserModel(config) {
 
 // expose enum on the model, and provide an internal convenience reference 
   var reasons = UserSchema.statics.failedLogin = {
-    NOT_FOUND: 0,
-    PASSWORD_INCORRECT: 1,
-    MAX_ATTEMPTS: 2
+    NOT_FOUND: 'NOT_FOUND',
+    PASSWORD_INCORRECT: 'PASSWORD_INCORRECT',
+    MAX_ATTEMPTS: 'MAX_ATTEMPTS',
+    DUPLICATE_EMAIL: 'DUPLICATE_EMAIL',
+    ALREADY_LOGGED_IN: 'ALREADY_LOGGED_IN'
   };
 
   UserSchema.statics.getAuthenticated = function (email, password, cb) {
@@ -93,7 +98,7 @@ function UserModel(config) {
 
       // make sure the user exists
       if (!user) {
-        return cb(null, null, reasons.NOT_FOUND);
+        return cb(null, false, reasons.NOT_FOUND);
       }
 
       // check if the account is currently locked
@@ -101,7 +106,7 @@ function UserModel(config) {
         // just increment login attempts if account is already locked
         return user.incLoginAttempts(function (err) {
           if (err) return cb(err);
-          return cb(null, null, reasons.MAX_ATTEMPTS);
+          return cb(null, false, reasons.MAX_ATTEMPTS);
         });
       }
 
@@ -113,7 +118,7 @@ function UserModel(config) {
         if (isMatch) {
           // if there's no lock or failed attempts and the password does not
           // need to be re-hashed, just return the user
-          if (!user.loginAttempts && !user.lockUntil && bcrypt.getRounds(user.password) === SALT_WORK_FACTOR) {
+          if (!user.loginAttempts && !user.lockUntil && bcrypt.getRounds(user.local.password) === SALT_WORK_FACTOR) {
             return cb(null, user);
           }
           // reset attempts and lock info
@@ -151,11 +156,12 @@ function UserModel(config) {
 
           // Sync solution, not prefered!
           // check if re-hashing the password is necessary and if so, do it
-          if (bcrypt.getRounds(user.password) !== SALT_WORK_FACTOR) {
+          if (bcrypt.getRounds(user.local.password) !== SALT_WORK_FACTOR) {
             // hash the password using our new salt
             // set the hashed password to our updates object
-            updates.$set.password = bcrypt.hashSync(password, SALT_WORK_FACTOR);
+            updates.$set['local.password'] = bcrypt.hashSync(password, SALT_WORK_FACTOR);
           }
+
           return user.update(updates, function (err) {
             if (err) return cb(err);
             return cb(null, user);
@@ -166,7 +172,7 @@ function UserModel(config) {
         // password is incorrect, so increment login attempts before responding
         user.incLoginAttempts(function (err) {
           if (err) return cb(err);
-          return cb(null, null, reasons.PASSWORD_INCORRECT);
+          return cb(null, false, reasons.PASSWORD_INCORRECT);
         });
       });
     });

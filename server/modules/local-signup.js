@@ -5,20 +5,39 @@ var mongoose = require('mongoose');
 
 module.exports = LocalSignUp;
 
-LocalSignUp.$inject = ['server', 'passport', 'logFunc'];
-function LocalSignUp(server, passport, log) {
-  server.post('/signup', function(req, res) {
-    passport.authenticate('local-signup', function(err, user) {
-      log(2);
-      if (err) res.sendStatus(500);
-      log(3);
-
-      if (user) {
-        res.sendStatus(200);
-      } else {
-        res.sendStatus(500);
+LocalSignUp.$inject = ['server', 'passport', 'userModel'];
+function LocalSignUp(server, passport, User) {
+  server.post('/signup', function(req, res, next) {
+    passport.authenticate('local-signup', function(err, user, reason) {
+      if (err) {
+        // internal error
+        return res.sendStatus(500);
       }
 
-    })(req, res);
+      if (user) {
+        // handle success
+        return req.login(user, function(err) {
+          if (err) return res.sendStatus(500);
+
+          return res.sendStatus(200)
+        });
+      } else {
+        // otherwise we can determine why we failed
+        var reasons = User.failedLogin;
+
+        switch (reason) {
+          case reasons.NOT_FOUND:
+            return res.sendStatus(500);
+            break;
+          case reasons.DUPLICATE_EMAIL:
+            return res.sendStatus(402);
+            break;
+          default:
+            return res.sendStatus(500)
+        }
+      }
+
+    })(req, res, next);
   });
 }
+
