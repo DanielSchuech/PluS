@@ -1,7 +1,7 @@
 {
   "name": "DS-PluS",
   "version": "0.0.1",
-  "author": "Daniel Schüch <dschuehc@gmail.com>",
+  "author": "Daniel Schüch <dschuech@gmail.com>",
   "description": "Plugin-Based Architecture for OS, Backend & Frontend | Boilerplate by Can Pekesen",
   "keywords": [
     "express",
@@ -95,6 +95,7 @@
     "passport": "0.3.0",
     "passport-local": "1.0.0",
     "q-io": "1.13.1",
-    "tiny-di": "0.1.0"
+    "tiny-di": "0.1.0",
+    "ui-router": "0.2.15"
   }
 }

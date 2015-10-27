@@ -1,1 +1,2 @@
-angular.module("app.templateCache", []).run(["$templateCache", function($templateCache) {$templateCache.put("dummy.cache.html","dummy");}]);
+angular.module("app.templateCache", []).run(["$templateCache", function($templateCache) {$templateCache.put("dummy.cache.html","dummy");
+$templateCache.put("routing/login/login.cache.html","<div class=\"main-login\">\n  <h3>\n    {{ \"welcome.message\" | translate }}\n  </h3>\n  \n  <table class=\"login-table\">\n    <tr>\n      <td>\n        Login\n      </td>\n      <td>\n        Sign Up\n      </td>\n    </tr>\n  </table>\n</div>");}]);
