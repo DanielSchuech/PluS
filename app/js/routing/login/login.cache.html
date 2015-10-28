@@ -19,11 +19,11 @@
         <div>
           <div class="form-group">
               <label>{{ "email" | translate }}</label>
-              <input type="text" class="form-control nearly-full-width" name="email">
+              <input type="text" class="form-control nearly-full-width">
           </div>
           <div class="form-group">
               <label>{{ "password" | translate }}</label>
-              <input type="password" class="form-control nearly-full-width" name="password">
+              <input type="password" class="form-control nearly-full-width">
           </div>
   
           <button type="button" class="btn btn-warning">
@@ -41,18 +41,22 @@
         <div>
           <div class="form-group">
               <label>{{ "email" | translate }}</label>
-              <input type="text" class="form-control" name="email">
+              <input type="text" class="form-control">
           </div>
           <div class="form-group">
               <label>{{ "password" | translate }}</label>
-              <input type="password" class="form-control" name="password">
+              <input type="password" class="form-control" ng-model=loginCtrl.pw1
+                ng-change="loginCtrl.comparePasswords()">
           </div>
           <div class="form-group">
               <label>{{ "repeat.password" | translate }}</label>
-              <input type="password" class="form-control" name="password">
+              <input type="password" class="form-control" ng-model=loginCtrl.pw2
+                ng-class="{'input-error': loginCtrl.invalidPW2}"
+                ng-change="loginCtrl.comparePasswords()">
           </div>
   
-          <button type="button" class="btn btn-warning">
+          <button type="button" class="btn btn-warning"
+            ng-disabled="loginCtrl.invalidPW2">
             {{ "signup" | translate }}
           </button>
         </div>
