@@ -10,7 +10,9 @@ function Routes($stateProvider, $urlRouterProvider) {
   $stateProvider
   .state('login', {
     url: '^/login',
-    template: require('./login/login.cache.html')
+    template: require('./login/login.cache.html'),
+    controller: 'LoginController',
+    controllerAs: 'loginCtrl'
   });
 }  
   

@@ -9,6 +9,7 @@ var requires = [
 module.exports = angular.module('app.routing', requires);
 
 // controllers
+require('./login/login.controller');
 
 // directives
 

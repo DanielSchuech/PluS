@@ -1,3 +1,8 @@
 {
-  "welcome.message": "Welcome to the PLUgin System Administration Panel"
+  "welcome.message": "Welcome to the PLUgin System Administration Panel",
+  "signin": "Sign In",
+  "signup": "Sign Up",
+  "email": "E-Mail",
+  "password": "Password",
+  "repeat.password": "Repeat Password"
 }
