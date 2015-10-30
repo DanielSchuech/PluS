@@ -4,12 +4,14 @@ var component = require('../routing.module');
 
 component.controller('LoginController', LoginController);
 
-function LoginController($translate) {
+function LoginController($translate, UserManagementService, $location) {
   var vm = this;
   
   vm.changeLanguageTo = changeLanguageTo;
-  vm.comparePasswords = comparePasswords;
+  vm.compareRegPasswords = compareRegPasswords;
+  vm.login = login;
   
+  UserManagementService.checkLogin();
   loadInitialLang();
   
   function changeLanguageTo(newLang) {
@@ -25,11 +27,29 @@ function LoginController($translate) {
   }
   
   vm.invalidPW2 = false;
-  function comparePasswords() {
-    if (vm.pw1 !== vm.pw2) {
+  function compareRegPasswords() {
+    if (vm.reg_pw1 !== vm.reg_pw2) {
       vm.invalidPW2 = true;
     } else {
       vm.invalidPW2 = false;
+    }
+  }
+  
+  
+  function login() {
+    vm.loginFailure = 0;
+    
+    var loginPromise = UserManagementService.login(vm.log_email, vm.log_pw);
+    
+    loginPromise.then(loginCorrect, loginFailed);
+    
+    function loginCorrect() {
+      $location.path('/');
+    }
+    
+    function loginFailed(err) {
+      console.log(err);
+      vm.loginFailure = err.status;
     }
   }
 }

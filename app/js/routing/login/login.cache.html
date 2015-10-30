@@ -19,16 +19,28 @@
         <div>
           <div class="form-group">
               <label>{{ "email" | translate }}</label>
-              <input type="text" class="form-control nearly-full-width">
+              <input type="text" class="form-control nearly-full-width" ng-model="loginCtrl.log_email">
           </div>
           <div class="form-group">
               <label>{{ "password" | translate }}</label>
-              <input type="password" class="form-control nearly-full-width">
+              <input type="password" class="form-control nearly-full-width" ng-model="loginCtrl.log_pw">
           </div>
   
-          <button type="button" class="btn btn-warning">
+          <button type="button" class="btn btn-warning" ng-click="loginCtrl.login()">
             {{ "signin" | translate }}
           </button>
+          
+          <div>
+            <div ng-show="loginCtrl.loginFailure === 401" class="alert alert-danger login-alert">
+              {{ "login.failure.not_found" | translate }}
+            </div>
+            <div ng-show="loginCtrl.loginFailure === 402" class="alert alert-danger login-alert">
+              {{ "login.failure.password_incorrect" | translate }}
+            </div>
+            <div ng-show="loginCtrl.loginFailure === 403" class="alert alert-danger login-alert">
+              {{ "login.failure.max_attemps" | translate }}
+            </div>
+          </div>
         </div>
       </td>
       <td>
@@ -41,18 +53,18 @@
         <div>
           <div class="form-group">
               <label>{{ "email" | translate }}</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" ng-model="loginCtrl.reg_email">
           </div>
           <div class="form-group">
               <label>{{ "password" | translate }}</label>
-              <input type="password" class="form-control" ng-model=loginCtrl.pw1
-                ng-change="loginCtrl.comparePasswords()">
+              <input type="password" class="form-control" ng-model="loginCtrl.reg_pw1"
+                ng-change="loginCtrl.compareRegPasswords()">
           </div>
           <div class="form-group">
               <label>{{ "repeat.password" | translate }}</label>
-              <input type="password" class="form-control" ng-model=loginCtrl.pw2
+              <input type="password" class="form-control" ng-model="loginCtrl.reg_pw2"
                 ng-class="{'input-error': loginCtrl.invalidPW2}"
-                ng-change="loginCtrl.comparePasswords()">
+                ng-change="loginCtrl.comparRegePasswords()">
           </div>
   
           <button type="button" class="btn btn-warning"

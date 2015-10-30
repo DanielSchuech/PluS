@@ -10,6 +10,7 @@ module.exports = angular.module('app.routing', requires);
 
 // controllers
 require('./login/login.controller');
+require('./home/home.controller');
 
 // directives
 

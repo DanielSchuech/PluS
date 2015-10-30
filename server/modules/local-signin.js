@@ -49,5 +49,10 @@ function LocalSignIn(server, passport, User) {
 
     })(req, res, next);
   });
+  
+  server.get('/checklogin', function(req, res, next) {
+    //console.log(req.user);
+    if (req.user) res.sendStatus(200); else res.sendStatus(401);
+  });  
 
 }

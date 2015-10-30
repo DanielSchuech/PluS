@@ -13,6 +13,12 @@ function Routes($stateProvider, $urlRouterProvider) {
     template: require('./login/login.cache.html'),
     controller: 'LoginController',
     controllerAs: 'loginCtrl'
+  })
+  .state('home', {
+    url: '^/',
+    template: require('./home/home.cache.html'),
+    controller: 'HomeController',
+    controllerAs: 'homeCtrl'
   });
 }  
   

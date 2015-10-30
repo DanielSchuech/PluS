@@ -4,5 +4,8 @@
   "signup": "Registrieren",
   "email": "E-Mail",
   "password": "Passwort",
-  "repeat.password": "Passwort wiederholen"
+  "repeat.password": "Passwort wiederholen",
+  "login.failure.not_found": "Die angegebene E-Mail ist nicht registriert.",
+  "login.failure.password_incorrect": "Falsches Passwort!",
+  "login.failure.max_attemps": "Du hast die maximale Anzahl an Loginversuchen erreicht. Versuche es später nocheinmal."
 }

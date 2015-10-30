@@ -4,5 +4,8 @@
   "signup": "Sign Up",
   "email": "E-Mail",
   "password": "Password",
-  "repeat.password": "Repeat Password"
+  "repeat.password": "Repeat Password",
+  "login.failure.not_found": "The given E-Mail Address does not exist.",
+  "login.failure.password_incorrect": "Wrong Password!",
+  "login.failure.max_attemps": "You have reached the maximal number of attemps. Try it Later again."
 }
