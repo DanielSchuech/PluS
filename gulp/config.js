@@ -57,6 +57,14 @@ module.exports = {
     'src' : 'app/misc/**/*',
     'dest': 'build/dist/'
   },
+  'pluginSystem': {
+    'src' : 'plugin_system/**/*',
+    'dest': 'build/plugin_systems'
+  },
+  'plugins': {
+    'src' : 'plugins/**/*',
+    'dest': 'build/plugins'
+  },
 
   'views': {
     'watch': [

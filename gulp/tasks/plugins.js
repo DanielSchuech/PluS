@@ -7,11 +7,11 @@ var gulpif     = require('gulp-if');
 var imagemin   = require('gulp-imagemin');
 var livereload = require('gulp-livereload');
 
-gulp.task('pluginSystem', function() {
+gulp.task('plugins', function() {
 
-  var dest = config.pluginSystem.dest;
+  var dest = config.plugins.dest;
 
-  return gulp.src(config.pluginSystem.src)
+  return gulp.src(config.plugins.src)
     .pipe(changed(dest)) // Ignore unchanged files
     .pipe(gulpif(global.isProd, imagemin()))    // Optimize
     .pipe(gulp.dest(dest))

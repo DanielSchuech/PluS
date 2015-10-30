@@ -7,13 +7,15 @@
       {"module": "logout", "file": "modules/logout"},
       {"module": "local-signup", "file": "modules/local-signup"},
       {"module": "local-signin", "file": "modules/local-signin"},
+      {"module": "plugin-system", "file": "modules/plugin-system"},
       {"module": "angular", "file": "modules/angular"}
     ],
     "extensions": [
       {"extension": "mongoDB", "file": "extensions/mongodb"},
       {"extension": "userModel", "file": "extensions/usermodel"},
       {"extension": "passport", "file": "extensions/passport"},
-      {"extension": "passport-local", "file": "extensions/passport-local"}
+      {"extension": "passport-local", "file": "extensions/passport-local"},
+      {"extension": "plugin-system", "file": "../plugin_system"}
     ]
   },
   "translations": {

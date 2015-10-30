@@ -12,6 +12,8 @@ var session = require('express-session');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
 
+var pluginSystem = require('../plugin_system');
+
 var sessionSecret = require('./sessionsecret');
 
 module.exports = Daemon;
@@ -70,6 +72,8 @@ function Daemon(logFunc, config) {
   loadModules();
 
   runServer();
+  
+  pluginSystem.start();
 
   function runServer() {
     var s = http.createServer(server);

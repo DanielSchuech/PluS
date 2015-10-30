@@ -8,4 +8,5 @@ gulp.task('watch', function () {
   gulp.watch(config.images.src,  ['images']);
   gulp.watch(config.views.watch, ['views']);
   gulp.watch(config.translations.src, ['translations']);
+  gulp.watch(config.pluginSystem.src,  ['server:restart']);
 });

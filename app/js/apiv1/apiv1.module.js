@@ -12,5 +12,6 @@ module.exports = angular.module('app.apiv1', requires);
 
 // services
 require('./usermanagement.service');
+require('./pluginsystem.service');
 
 // routes

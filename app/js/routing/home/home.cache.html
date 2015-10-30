@@ -4,7 +4,13 @@
       {{ "welcome.message" | translate }}
     </any>
     <any class="main-serverstatus">
-      Current Status: ...
+      Current Status: 
+      <any ng-show="homeCtrl.pluginSystemStatus == 1" class="success">
+        running
+      </any>
+      <any ng-show="homeCtrl.pluginSystemStatus == 0" class="error">
+        stopped
+      </any>
     </any>
   </div>
   <div>
