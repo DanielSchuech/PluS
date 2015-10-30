@@ -10,15 +10,33 @@ function Routes($stateProvider, $urlRouterProvider) {
   $stateProvider
   .state('login', {
     url: '^/login',
-    template: require('./login/login.cache.html'),
-    controller: 'LoginController',
-    controllerAs: 'loginCtrl'
+    views: {
+      "main": { 
+        template: require('./login/login.cache.html'),
+        controller: 'LoginController',
+        controllerAs: 'loginCtrl'
+      }
+    }
   })
   .state('home', {
+    url: '',
+    views: {
+      "main": { 
+        template: require('./home/home.cache.html'),
+        controller: 'HomeController',
+        controllerAs: 'homeCtrl'
+      }
+    }
+  })
+  .state('home.status', {
     url: '^/',
-    template: require('./home/home.cache.html'),
-    controller: 'HomeController',
-    controllerAs: 'homeCtrl'
+    views: {
+      'content@home': {
+          template: require('./status/status.cache.html'),
+          controller: 'StatusController',
+          controllerAs: 'statusCtrl'
+      }
+    }
   });
 }  
   
