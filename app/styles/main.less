@@ -12,6 +12,54 @@ body {
  min-height:100%;
 }
 
+.full-width {
+  width: 100%;
+}
+
+.main-container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.main-header {
+  width: 100%;
+  height: 35px;
+  background-color: rgba(0, 186, 228, 0.33);
+  color: #FFFFFF;
+  padding: 7px;
+}
+.main-serverstatus {
+  float: right;
+}
+.main-table {
+  background-color: @main-bg-color;
+  //height: 500px;
+  
+  td {
+    vertical-align: top;
+  }
+}
+.main-menu {
+  margin-top: 20px;
+}
+.main-menu-item {
+  background-color: @main-bg-color-inline !important;
+  cursor: default;
+}
+.main-menu-item:hover {
+  background-color: @main-bg-color-inherit-hover !important;
+}
+.main-content {
+  background-color: @main-bg-color-inline !important;
+  border-radius: 4px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  width: 100%;
+  height: 300px;
+}
+
+
 @import "bootstrap";
+@import "variables";
 @import (less) "../../node_modules/angular-motion/dist/angular-motion.css";
 @import "login";

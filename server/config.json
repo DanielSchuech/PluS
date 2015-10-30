@@ -23,7 +23,7 @@
     "user": "mongodb://localhost:27017/userDatabase"
   },
   "userModel": {
-    "salt_work_factor": 13,
+    "salt_work_factor": 11,
     "max_login_attempts": 5,
     "lock_time_10_min": 600000
   },
