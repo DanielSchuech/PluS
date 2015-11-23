@@ -1,4 +1,6 @@
-module.exports = newRoute;
+var exp = {}
+exp.start = newRoute;
+module.exports = exp;
 
 function newRoute(exchange) {
   var app = exchange['express'].server;

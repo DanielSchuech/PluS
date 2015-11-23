@@ -13,13 +13,10 @@ function HomeController(UserManagementService, $interval, PluginSystemService) {
   $interval(refreshSystemStatus, 5000);
   
   function refreshSystemStatus() {
-    PluginSystemService.getStatus().then(statusGetSuccess, statusGetFailed);
+    PluginSystemService.getStatus().then(statusGetSuccess);
     
     function statusGetSuccess(status) {
-      vm.pluginSystemStatus = status.data;
-    }
-    function statusGetFailed() {
-      vm.pluginSystemStatus = 0;
+      vm.pluginSystemStatus = status;
     }
   };
 }
