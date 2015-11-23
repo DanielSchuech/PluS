@@ -2,11 +2,19 @@
   "plugins": [
     {
       "name": "express",
-      "enabled": true
-    },
-    {
-      "name": "testpage",
-      "enabled": true
-    }  
+      "enabled": true,
+      "plugins": [
+        {
+          "name": "testpage",
+          "enabled": true,
+          "plugins": [
+            {
+              "name": "secondlevel",
+              "enabled": true
+            }
+          ]
+        }
+      ]  
+    }
   ]
 }

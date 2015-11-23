@@ -13,23 +13,41 @@ system.pluginStatus = {};
 
 function start() {
   pluginConfig.plugins.forEach(function initialisePlugin(plugin) {
-    if (plugin.enabled) {
-      console.log('Starting ' + plugin.name + ' ...');
+    
+  });
+  loadPlugins(pluginConfig.plugins, pathToPlugins, exchange, system.pluginStatus)
+  system.status = '1';
+}
+
+function loadPlugins(plugins, pluginsRootPath, exchange, pluginStatus) {
+  if (!plugins) {
+    return;
+  }
+  
+  plugins.forEach(function initialisePlugin(plugin) {
+    loadPlugin(pluginsRootPath, plugin, exchange, pluginStatus);
+  });
+}
+
+function loadPlugin(moduleRootPath, config, exchange, pluginStatus) {
+  if (config.enabled) {
+      console.log('Starting ' + config.name + ' ...');
       
       try {
-        var module = require(pathToPlugins + plugin.name);
+        var module = require(moduleRootPath + config.name);
         
         module.start(exchange);
-        system.pluginStatus[plugin.name] = true;
+        pluginStatus[config.name] = true;
+        
+        var pluginsPath = moduleRootPath + config.name + '/plugins/';
+        loadPlugins(config.plugins, pluginsPath, exchange, pluginStatus);
       } catch (e) {
-        console.log('Could not load plugin: ' + plugin.name);
+        console.log('Could not load plugin: ' + config.name);
         console.log(e);
-        system.pluginStatus[plugin.name] = false;
+        pluginStatus[config.name] = false;
       }
     
     }
-  });
-  system.status = '1';
 }
 
 function stop() {
