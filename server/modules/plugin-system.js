@@ -7,6 +7,7 @@ function PluginSys(server, config, pluginSystem) {
   server.use('/plugin-system/status', function(req, res, next) {
     res.send(pluginSystem.status);
   });
+  
   server.use('/plugin-system/stop', function(req, res, next) {
     if (req.user) {
       pluginSystem.stop();
@@ -15,6 +16,7 @@ function PluginSys(server, config, pluginSystem) {
       res.sendStatus(401);
     }
   });  
+  
   server.use('/plugin-system/start', function(req, res, next) {
     if (req.user) {
       pluginSystem.start();
@@ -23,4 +25,8 @@ function PluginSys(server, config, pluginSystem) {
       res.sendStatus(401);
     }
   }); 
+  
+  server.get('/plugin-system/plugins', function(req, res, next) {
+    res.send(pluginSystem.pluginStatus);
+  });
 }

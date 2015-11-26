@@ -1,0 +1,26 @@
+<div class="centertext">
+  <table class="manage-plugin-table">
+    <tr>
+      <th>
+        Plugin
+      </th>
+      <th>
+        Status
+      </th>
+      <th>
+        aktivieren / deaktivieren
+      </th>
+    </tr>
+    <tr ng-repeat="plugin in manageCtrl.plugins">
+      <td>
+        {{plugin.name}}
+      </td>
+      <td>
+        {{plugin.status}}
+      </td>
+      <td>
+        button
+      </td>
+    </tr>
+  </table>
+</div>

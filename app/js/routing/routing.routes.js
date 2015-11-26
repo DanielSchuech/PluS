@@ -37,6 +37,16 @@ function Routes($stateProvider, $urlRouterProvider) {
           controllerAs: 'statusCtrl'
       }
     }
+  })
+  .state('home.manage', {
+    url: '^/',
+    views: {
+      'content@home': {
+          template: require('./manage/manage.cache.html'),
+          controller: 'ManageController',
+          controllerAs: 'manageCtrl'
+      }
+    }
   });
 }  
   
