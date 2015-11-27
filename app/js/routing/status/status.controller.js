@@ -4,7 +4,7 @@ var component = require('../routing.module');
 
 component.controller('StatusController', StatusController);
 
-function StatusController(PluginSystemService, $interval) {
+function StatusController(PluginSystemService, $interval, $scope) {
   var vm = this;
   vm.startAndStop = startAndStop;
   
@@ -13,7 +13,11 @@ function StatusController(PluginSystemService, $interval) {
   
   vm.startStopButtonText = stopTranslationKey;
   refreshStatus();
-  $interval(refreshStatus, 5000);
+  
+  var interval = $interval(refreshStatus, 5000);
+  $scope.$on('$destroy', function iVeBeenDismissed() {
+    $interval.cancel(interval);
+  });
   
   function startAndStop() {
     if (vm.status === '0') {

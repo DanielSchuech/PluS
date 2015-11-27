@@ -29,4 +29,8 @@ function PluginSys(server, config, pluginSystem) {
   server.get('/plugin-system/plugins', function(req, res, next) {
     res.send(pluginSystem.pluginStatus);
   });
+  
+  server.get('/plugin-system/stop-plugin/:plugin', function(req, res, next) {
+    res.send(pluginSystem.stopPlugin(req.params.plugin));
+  });
 }

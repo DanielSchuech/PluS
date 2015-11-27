@@ -9,6 +9,7 @@ function PluginSystemService($http) {
   this.start = start;
   this.stop = stop;
   this.getPlugins = getPlugins;
+  this.startPlugin = startPlugin;
   
   function getStatus() {
     return $http.get('/plugin-system/status').then(returnDataOfResponse, statusGetFailed);
@@ -35,15 +36,21 @@ function PluginSystemService($http) {
   }
   
   function JSON2Array(json) {
-      var array = [];
-      var keys = Object.keys(json);
-      keys.forEach(function(key) {
-        array.push({
-          name: key,
-          status: json[key]
-        });
+    var array = [];
+    var keys = Object.keys(json);
+    keys.forEach(function(key) {
+      var inlinePlugins = JSON2Array(json[key].plugins);
+      array.push({
+        name: key,
+        status: json[key].status,
+        plugins: inlinePlugins
       });
-      
-      return array;
-    }
+    });
+    
+    return array;
+  }
+  
+  function startPlugin(name) {
+    return $http.get('/plugin-system/stop-plugin/' + name);
+  }
 }

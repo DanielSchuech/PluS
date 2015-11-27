@@ -6,7 +6,10 @@ component.controller('ManageController', ManageController);
 
 function ManageController(PluginSystemService) {
   var vm = this;
+  vm.switchPlugin = switchPlugin;
+  vm.collapse = collapse;
   
+  vm.plugins = {};
   init();
   
   function init() {
@@ -14,6 +17,25 @@ function ManageController(PluginSystemService) {
     
     function getPlugins(data) {
       vm.plugins = data;
+      collapseAll(vm.plugins);
     }
   }
+  
+  function switchPlugin(name) {
+    PluginSystemService.startPlugin(name);
+  }
+  
+  function collapseAll(plugins) {
+    plugins.forEach(function(plugin) {
+      if (plugin.plugins.length > 0) {
+        plugin.collapse = true;
+        collapseAll(plugin.plugins);
+      }
+    });
+  }
+  
+  function collapse(plugin) {
+    plugin.collapse = !plugin.collapse;
+  }
+
 }

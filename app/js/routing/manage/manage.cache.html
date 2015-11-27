@@ -11,16 +11,54 @@
         aktivieren / deaktivieren
       </th>
     </tr>
-    <tr ng-repeat="plugin in manageCtrl.plugins">
+    <!--<tr ng-repeat="plugin in manageCtrl.plugins">
       <td>
         {{plugin.name}}
       </td>
       <td>
-        {{plugin.status}}
+        <status-styler input-model="plugin.status"></status-styler>
       </td>
       <td>
-        button
+        <switch input-model="plugin.status" change-model="false" 
+          on-change="manageCtrl.switchPlugin"
+          on-change-args="plugin.name"></switch>
       </td>
-    </tr>
-  </table>
+    </tr>-->
+    
+  </table>  
+    
+  <script type="text/ng-template" id="plugin_renderer.html">
+    <table class="manage-plugin-table">
+      <tr>
+        <td>
+          <span class="glyphicon glyphicon-plus" 
+              ng-show="plugin.plugins.length > 0 && !plugin.collapse"
+              ng-click="manageCtrl.collapse(plugin)"></span>
+          <span class="glyphicon glyphicon-minus" 
+              ng-hide="(plugin.plugins.length > 0 && !plugin.collapse) || plugin.plugins.length == 0"
+              ng-click="manageCtrl.collapse(plugin)"></span>
+          {{plugin.name}}
+        </td>
+        <td>
+          <status-styler input-model="plugin.status"></status-styler>
+        </td>
+        <td>
+          <switch input-model="plugin.status" change-model="false" 
+            on-change="manageCtrl.switchPlugin"
+            on-change-args="plugin.name"></switch>
+        </td>
+      </tr>
+      <tr ng-if="plugin.plugins.length > 0" ng-show="plugin.collapse">
+        <td colspan="3">
+          <any ng-repeat="plugin in plugin.plugins" ng-include="'plugin_renderer.html'"></any>
+        </td>
+      </tr>
+    </table>
+  </script>
+  
+  <any ng-repeat="plugin in manageCtrl.plugins" ng-include="'plugin_renderer.html'"></any>
+    
+    
+  
+    
 </div>

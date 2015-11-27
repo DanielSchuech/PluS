@@ -1,0 +1,8 @@
+<div class="btn-group">
+    <button type="button" ng-click="SwitchCtrl.switch()" class="btn btn-xs {{SwitchCtrl.inputModel ? 'btn-success' : ''}}" ng-disabled="SwitchCtrl.ngDisabled">
+        {{"on" | translate}}
+    </button>
+    <button type="button" ng-click="SwitchCtrl.switch()" class="btn btn-xs {{!SwitchCtrl.inputModel ? 'btn-danger' : ''}}" ng-disabled="SwitchCtrl.ngDisabled">
+        {{"off" | translate}}
+    </button>
+</div>

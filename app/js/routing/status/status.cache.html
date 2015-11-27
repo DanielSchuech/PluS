@@ -1,12 +1,7 @@
 <div class="centertext">
   <h1>
     Current Status:
-    <any ng-show="statusCtrl.status == 1" class="success">
-      running
-    </any>
-    <any ng-show="statusCtrl.status == 0" class="error">
-      stopped
-    </any>
+    <status-styler input-model="statusCtrl.status"></status-styler>
   </h1> 
   <button type="button" ng-click="statusCtrl.startAndStop()" class="btn btn-default">
     {{statusCtrl.startStopButtonText}}

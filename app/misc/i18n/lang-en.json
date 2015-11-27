@@ -7,5 +7,7 @@
   "repeat.password": "Repeat Password",
   "login.failure.not_found": "The given E-Mail Address does not exist.",
   "login.failure.password_incorrect": "Wrong Password!",
-  "login.failure.max_attemps": "You have reached the maximal number of attemps. Try it Later again."
+  "login.failure.max_attemps": "You have reached the maximal number of attemps. Try it Later again.",
+  "on": "on",
+  "off": "off"
 }
