@@ -1,12 +1,12 @@
 'use strict';
 
-var server = require('./server');
+var server = require('./plugin_system/server/server');
 var serverconf;
 try {
   serverconf = require(__dirname + '/config.json');
 } catch (e1) {
   try {
-    serverconf = require(__dirname + '/server/config.json');
+    serverconf = require(__dirname + '/plugin_system/server/config.json');
   } catch (e2) {
     console.error('Config not found');
     console.error('Exiting...');

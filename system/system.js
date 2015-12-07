@@ -1,6 +1,6 @@
 'use strict';
 
-var pathToPlugins = "../plugins/";
+var pathToPlugins = "../../plugins/";
 var pluginConfig = require(pathToPlugins + 'config.json');
 
 var system = {};

@@ -12,7 +12,7 @@ var session = require('express-session');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
 
-var pluginSystem = require('../plugin_system');
+var pluginSystem = require('../system');
 
 var sessionSecret = require('./sessionsecret');
 

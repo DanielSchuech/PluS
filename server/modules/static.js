@@ -7,6 +7,6 @@ module.exports = Static;
 
 Static.$inject = ['server', 'config'];
 function Static(server, config) {
-  var distDir = path.join(config.dist.root, 'dist');
+  var distDir = path.join(config.dist.root, 'plugin_system', 'dist');
   server.use('/dist', express.static(distDir));
 }

@@ -6,12 +6,12 @@ module.exports = {
   'styles': {
     'src' : ['app/styles/main.less'],
     'watch': ['app/styles/**/*.less'],
-    'dest': 'build/dist'
+    'dest': 'build/plugin_system/dist'
   },
 
   'bootstrap': {
     'src': 'node_modules/bootstrap/fonts/*',
-    'dest': 'build/dist/fonts'
+    'dest': 'build/plugin_system/dist/fonts'
   },
 
   'nodeScripts': {
@@ -19,11 +19,11 @@ module.exports = {
       '!server/**/*.spec.js',
       '!server/server.js',
       '!server/start.js',
-      '!server/sessionsecret.js',
+      'server/sessionsecret.js',
       'server/**/*',
       'server/*.json'
     ],
-    'dest': 'build/server'
+    'dest': 'build/plugin_system/server'
   },
 
   'scripts': {
@@ -39,7 +39,7 @@ module.exports = {
       '!modules/**/*.spec.es6',
       '!modules/**/*.e2e.js'
     ],
-    'dest': 'build/dist'
+    'dest': 'build/plugin_system/dist'
   },
 
   //written to support ngNewRouter, may be used in future
@@ -50,16 +50,16 @@ module.exports = {
 
   'images': {
     'src' : 'app/images/**/*',
-    'dest': 'build/dist/images'
+    'dest': 'build/plugin_system/dist/images'
   },
 
   'misc': {
     'src' : 'app/misc/**/*',
-    'dest': 'build/dist/'
+    'dest': 'build/plugin_system/dist/'
   },
   'pluginSystem': {
-    'src' : 'plugin_system/**/*',
-    'dest': 'build/plugin_systems'
+    'src' : 'system/**/*',
+    'dest': 'build/plugin_system/system'
   },
   'plugins': {
     'src' : 'plugins/**/*',
@@ -71,7 +71,8 @@ module.exports = {
       'app/index.html'
     ],
     'src': 'app/js/**/*.html',
-    'dest': 'app/js'
+    'dest': 'app/js',
+    'buildDest': 'build/plugin_system/dist'
   },
 
   'dist': {
@@ -134,7 +135,8 @@ module.exports = {
     // if following files change node is being restarted
     'watchDirectory': 'server/',
     'watchIgnorePatterns': ['*.spec.js'],
-    'server': 'server/start.js'
+    'server': 'server/start.js',
+    'serverInBuild': 'build/start.js'
   },
 
   'templateCache': {
@@ -145,7 +147,7 @@ module.exports = {
 
   'translations': {
     'src': 'app/misc/i18n/*',
-    'dest': 'build/dist/i18n/'
+    'dest': 'build/plugin_system/dist/i18n/'
   }
 
 };

@@ -1,7 +1,7 @@
 {
   "server": {
     "port": 8080,
-    "path": "server",
+    "path": "plugin_system/server",
     "modules": [
       {"module": "static", "file": "modules/static"},
       {"module": "logout", "file": "modules/logout"},
@@ -15,7 +15,7 @@
       {"extension": "userModel", "file": "extensions/usermodel"},
       {"extension": "passport", "file": "extensions/passport"},
       {"extension": "passport-local", "file": "extensions/passport-local"},
-      {"extension": "plugin-system", "file": "../plugin_system"}
+      {"extension": "plugin-system", "file": "../system"}
     ]
   },
   "translations": {

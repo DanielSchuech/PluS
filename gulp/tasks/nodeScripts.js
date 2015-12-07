@@ -8,7 +8,7 @@ gulp.task('nodeScripts', function() {
 
   // copy server and start script to the build folder
   gulp.src(['server/server.js'])
-    .pipe(gulp.dest(config.dist.root));
+    .pipe(gulp.dest(config.nodeScripts.dest));
 
   gulp.src(['server/start.js'])
     .pipe(gulp.dest(config.dist.root));

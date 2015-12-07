@@ -14,7 +14,7 @@ gulp.task('server', function() {
     basePath: config.dist.root,
     host: '0.0.0.0'
   });
-  child = forever.start(config.devServer.server, {
+  child = forever.start(config.devServer.serverInBuild, {
     args: ['./build'],
     watch: true,
     watchDirectory: config.devServer.watchDirectory,
