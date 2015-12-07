@@ -7,6 +7,7 @@ component.service('UserManagementService', UserManagementService);
 function UserManagementService($http, $location) {
   this.login = login;
   this.checkLogin = checkLogin;
+  this.signup = signup; 
   
   function login(email, pw) {
     var url = '/signin';
@@ -30,5 +31,12 @@ function UserManagementService($http, $location) {
     function redirectToLogin() {
       $location.path('/login');
     }
+  }
+  
+  function signup(email,pw) {
+    return $http.post('/signup', {
+      email: email,
+      password: pw
+    });
   }
 }

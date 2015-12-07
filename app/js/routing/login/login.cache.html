@@ -64,13 +64,18 @@
               <label>{{ "repeat.password" | translate }}</label>
               <input type="password" class="form-control" ng-model="loginCtrl.reg_pw2"
                 ng-class="{'input-error': loginCtrl.invalidPW2}"
-                ng-change="loginCtrl.comparRegePasswords()">
+                ng-change="loginCtrl.compareRegPasswords()">
           </div>
   
           <button type="button" class="btn btn-warning"
-            ng-disabled="loginCtrl.invalidPW2">
+            ng-disabled="loginCtrl.invalidPW2"
+            ng-click="loginCtrl.signup()">
             {{ "signup" | translate }}
           </button>
+          
+          <any ng-show="loginCtrl.regFailed" class="alert alert-danger login-alert">
+              registration failed
+          </any>
         </div>
       </td>
     </tr>
