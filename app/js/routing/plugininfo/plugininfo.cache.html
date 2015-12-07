@@ -1,5 +1,5 @@
 <div>
-  <table class="plugininfo-table">
+  <table class="plugininfo-table" ng-show="pluginInfoCtrl.configAvailable">
     <tr>
       <th>
         Name
@@ -18,7 +18,8 @@
     </tr>
   </table> 
   
-  <button class="btn btn-warning plugininfo-save">
+  <button class="btn btn-warning plugininfo-save" ng-show="pluginInfoCtrl.configAvailable"
+    ng-click="pluginInfoCtrl.save()">
     Speichern
   </button>
 </div>

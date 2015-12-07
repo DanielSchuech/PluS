@@ -1,5 +1,8 @@
 'use strict';
 
+var fs = require("q-io/fs");
+var path = require('path');
+
 var pathToPlugins = "../../plugins/";
 var pluginConfig = require(pathToPlugins + 'config.json');
 
@@ -8,6 +11,7 @@ system.start = start;
 system.stop = stop;
 system.stopPlugin = stopPlugin;
 system.getProperties = getProperties;
+system.setProperties = setProperties;
 
 var exchange = {}; 
 system.status = '0';
@@ -171,6 +175,14 @@ function getProperties(pluginName) {
     console.log('config to ' + pluginName + ' not found');
   }
   return config;
+}
+
+function setProperties(pluginName, properties) {
+  var pathInPlugin = findPluginPath(pluginName);
+  var configPath = pathToPlugins + pathInPlugin + '/config.json';
+  var dir = path.join(__dirname, configPath);
+  
+  return fs.write(dir, JSON.stringify(properties, null, 2));
 }
 
 module.exports = system;

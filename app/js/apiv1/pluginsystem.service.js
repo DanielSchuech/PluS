@@ -11,6 +11,7 @@ function PluginSystemService($http) {
   this.getPlugins = getPlugins;
   this.startPlugin = startPlugin;
   this.getProperties = getProperties;
+  this.setProperties = setProperties;
   
   function getStatus() {
     return $http.get('/plugin-system/status').then(returnDataOfResponse, statusGetFailed);
@@ -59,6 +60,12 @@ function PluginSystemService($http) {
     return $http.get('/plugin-system/properties/' + name).then(returnDataOfResponse).then(JSON2Array);
   }
   
+  function setProperties(name, array) {
+    return $http.post('/plugin-system/properties/' + name, {
+      properties: Array2JSON(array)
+    });
+  }
+  
   function JSON2Array(json) {
     var array = [];
     var keys = Object.keys(json);
@@ -68,7 +75,14 @@ function PluginSystemService($http) {
         value: json[key]
       });
     });
-    
     return array;
+  }
+  
+  function Array2JSON(array) {
+    var json = {};
+    array.forEach(function(item) {
+      json[item.name] = item.value;
+    });
+    return json;
   }
 }

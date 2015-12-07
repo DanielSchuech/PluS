@@ -37,4 +37,16 @@ function PluginSys(server, config, pluginSystem) {
   server.get('/plugin-system/properties/:plugin', function(req, res, next) {
     res.send(pluginSystem.getProperties(req.params.plugin));
   });  
+  
+  server.post('/plugin-system/properties/:plugin', function(req, res, next) {
+    pluginSystem.setProperties(req.params.plugin, req.body.properties).then(success, failed);
+    
+    function success() {
+      res.sendStatus(200);
+    }
+    
+    function failed(a) {console.log(a)
+      res.sendStatus(400);
+    }
+  });  
 }

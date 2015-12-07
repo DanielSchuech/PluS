@@ -31,7 +31,7 @@ gulp.task('server', function() {
 
 });
 
-gulp.task('server:restart', ['nodeScripts'], function() {
+gulp.task('server:restart', ['nodeScripts', 'pluginSystem'], function() {
   if (child) {
     child.restart();
   }
