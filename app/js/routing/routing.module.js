@@ -13,6 +13,7 @@ require('./login/login.controller');
 require('./home/home.controller');
 require('./status/status.controller');
 require('./manage/manage.controller');
+require('./plugininfo/plugininfo.controller');
 
 // directives
 

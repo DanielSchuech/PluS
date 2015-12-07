@@ -29,7 +29,7 @@ function Routes($stateProvider, $urlRouterProvider) {
     }
   })
   .state('home.status', {
-    url: '^/',
+    url: '^/status',
     views: {
       'content@home': {
           template: require('./status/status.cache.html'),
@@ -39,12 +39,22 @@ function Routes($stateProvider, $urlRouterProvider) {
     }
   })
   .state('home.manage', {
-    url: '^/',
+    url: '^/manage',
     views: {
       'content@home': {
           template: require('./manage/manage.cache.html'),
           controller: 'ManageController',
           controllerAs: 'manageCtrl'
+      }
+    }
+  })
+  .state('home.plugininfo', {
+    url: '^/info/:plugin',
+    views: {
+      'content@home': {
+          template: require('./plugininfo/plugininfo.cache.html'),
+          controller: 'PluginInfoController',
+          controllerAs: 'pluginInfoCtrl'
       }
     }
   });

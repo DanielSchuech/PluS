@@ -7,6 +7,7 @@ var system = {};
 system.start = start;
 system.stop = stop;
 system.stopPlugin = stopPlugin;
+system.getProperties = getProperties;
 
 var exchange = {}; 
 system.status = '0';
@@ -159,6 +160,17 @@ function calculatePathAndSaveIfExists(path, plugin, name) {
       path.unshift(plugin.name);
     }
   }
+}
+
+function getProperties(pluginName) {
+  var pathInPlugin = findPluginPath(pluginName);
+  var config = {};
+  try {
+    config = require(pathToPlugins + pathInPlugin + '/config.json');
+  } catch(e) {
+    console.log('config to ' + pluginName + ' not found');
+  }
+  return config;
 }
 
 module.exports = system;

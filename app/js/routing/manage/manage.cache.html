@@ -37,7 +37,9 @@
           <span class="glyphicon glyphicon-minus" 
               ng-hide="(plugin.plugins.length > 0 && !plugin.collapse) || plugin.plugins.length == 0"
               ng-click="manageCtrl.collapse(plugin)"></span>
-          {{plugin.name}}
+          <a ui-sref="home.plugininfo({plugin: plugin.name})">
+            {{plugin.name}}
+          </a>  
         </td>
         <td>
           <status-styler input-model="plugin.status"></status-styler>

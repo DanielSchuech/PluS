@@ -1,0 +1,24 @@
+<div>
+  <table class="plugininfo-table">
+    <tr>
+      <th>
+        Name
+      </th>
+      <th>
+        Value
+      </th>
+    </tr>
+    <tr ng-repeat="item in pluginInfoCtrl.config">
+      <td>
+        {{ item.name }}
+      </td>
+      <td>
+        <input ng-model="item.value" class="form-control">
+      </td>
+    </tr>
+  </table> 
+  
+  <button class="btn btn-warning plugininfo-save">
+    Speichern
+  </button>
+</div>

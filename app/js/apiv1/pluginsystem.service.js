@@ -10,6 +10,7 @@ function PluginSystemService($http) {
   this.stop = stop;
   this.getPlugins = getPlugins;
   this.startPlugin = startPlugin;
+  this.getProperties = getProperties;
   
   function getStatus() {
     return $http.get('/plugin-system/status').then(returnDataOfResponse, statusGetFailed);
@@ -32,14 +33,14 @@ function PluginSystemService($http) {
   }
   
   function getPlugins() {
-    return $http.get('/plugin-system/plugins').then(returnDataOfResponse).then(JSON2Array);
+    return $http.get('/plugin-system/plugins').then(returnDataOfResponse).then(JSON2ArrayPlugins);
   }
   
-  function JSON2Array(json) {
+  function JSON2ArrayPlugins(json) {
     var array = [];
     var keys = Object.keys(json);
     keys.forEach(function(key) {
-      var inlinePlugins = JSON2Array(json[key].plugins);
+      var inlinePlugins = JSON2ArrayPlugins(json[key].plugins);
       array.push({
         name: key,
         status: json[key].status,
@@ -52,5 +53,22 @@ function PluginSystemService($http) {
   
   function startPlugin(name) {
     return $http.get('/plugin-system/stop-plugin/' + name);
+  }
+  
+  function getProperties(name) {
+    return $http.get('/plugin-system/properties/' + name).then(returnDataOfResponse).then(JSON2Array);
+  }
+  
+  function JSON2Array(json) {
+    var array = [];
+    var keys = Object.keys(json);
+    keys.forEach(function(key) {
+      array.push({
+        name: key,
+        value: json[key]
+      });
+    });
+    
+    return array;
   }
 }

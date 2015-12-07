@@ -33,4 +33,8 @@ function PluginSys(server, config, pluginSystem) {
   server.get('/plugin-system/stop-plugin/:plugin', function(req, res, next) {
     res.send(pluginSystem.stopPlugin(req.params.plugin));
   });
+  
+  server.get('/plugin-system/properties/:plugin', function(req, res, next) {
+    res.send(pluginSystem.getProperties(req.params.plugin));
+  });  
 }
