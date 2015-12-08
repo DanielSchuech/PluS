@@ -19,7 +19,7 @@ function Routes($stateProvider, $urlRouterProvider) {
     }
   })
   .state('home', {
-    url: '',
+    url: '^/home',
     views: {
       "main": { 
         template: require('./home/home.cache.html'),
@@ -29,7 +29,7 @@ function Routes($stateProvider, $urlRouterProvider) {
     }
   })
   .state('home.status', {
-    url: '^/status',
+    url: '^/',
     views: {
       'content@home': {
           template: require('./status/status.cache.html'),

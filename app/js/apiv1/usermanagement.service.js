@@ -4,7 +4,7 @@ var component = require('./apiv1.module');
 
 component.service('UserManagementService', UserManagementService);
 
-function UserManagementService($http, $location) {
+function UserManagementService($http, $location, $state) {
   this.login = login;
   this.checkLogin = checkLogin;
   this.signup = signup; 
@@ -24,12 +24,12 @@ function UserManagementService($http, $location) {
     function loggedIn() {
       var path = $location.path();
       if (path === '/login') {
-        $location.path('/');
+        $state.go('home.status');
       }
     }
     
     function redirectToLogin() {
-      $location.path('/login');
+      $state.go('login');
     }
   }
   
