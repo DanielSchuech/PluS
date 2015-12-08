@@ -167,14 +167,21 @@ function calculatePathAndSaveIfExists(path, plugin, name) {
 }
 
 function getProperties(pluginName) {
-  var pathInPlugin = findPluginPath(pluginName);
+  var pathInPlugin = getModulePath(pluginName);
   var config = {};
   try {
     config = require(pathToPlugins + pathInPlugin + '/config.json');
   } catch(e) {
     console.log('config to ' + pluginName + ' not found');
   }
-  return config;
+  
+  var info = {}
+  try {
+    info = require(pathToPlugins + pathInPlugin + '/plugin.json');
+  } catch(e) {
+    console.log('plugin.json to ' + pluginName + ' not found');
+  }
+  return {config: config, info: info};
 }
 
 function setProperties(pluginName, properties) {

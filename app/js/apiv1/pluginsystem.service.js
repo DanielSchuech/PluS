@@ -57,7 +57,14 @@ function PluginSystemService($http) {
   }
   
   function getProperties(name) {
-    return $http.get('/plugin-system/properties/' + name).then(returnDataOfResponse).then(JSON2Array);
+    return $http.get('/plugin-system/properties/' + name).then(returnDataOfResponse).then(convert);
+    
+    function convert(response) {
+      return {
+        config: JSON2Array(response.config),
+        info: response.info
+      };  
+    }  
   }
   
   function setProperties(name, array) {

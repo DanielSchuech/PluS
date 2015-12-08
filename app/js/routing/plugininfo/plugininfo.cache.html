@@ -1,4 +1,70 @@
 <div>
+  <h1 class="plugininfo-h1">
+    {{pluginInfoCtrl.info.name}}
+  </h1>
+  
+  <h3>
+    Plugin Information
+  </h3>
+  
+  <table class="plugininfo-info">
+    <tr>
+      <td>
+        version
+      </td>
+      <td>
+        {{pluginInfoCtrl.info.version}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        description
+      </td>
+      <td>
+        {{pluginInfoCtrl.info.description}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        author
+      </td>
+      <td>
+         <any ng-repeat="author in pluginInfoCtrl.info.author">
+           <span> {{author.name}} ({{author.email}})</span> <br>
+         </any>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        homepage
+      </td>
+      <td>
+        {{pluginInfoCtrl.info.homepage}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        keywords
+      </td>
+      <td>
+        {{pluginInfoCtrl.info.keywords}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        license
+      </td>
+      <td>
+        {{pluginInfoCtrl.info.license}}
+      </td>
+    </tr>
+  </table>
+  
+  
+  <h3 ng-show="pluginInfoCtrl.configAvailable">
+    Plugin Config
+  </h3>
+  
   <table class="plugininfo-table" ng-show="pluginInfoCtrl.configAvailable">
     <tr>
       <th>

@@ -1,0 +1,16 @@
+{
+  "name": "express",
+  "version": "0.0.1",
+  "description": "express server for your web app",
+  "keywords": [
+    "express",
+    "framework",
+    "server"
+  ],
+  "author": {
+    "name": "Daniel Schuech",
+    "email": "dschuech@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/DanielSchuech"
+}
