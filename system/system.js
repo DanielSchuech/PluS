@@ -69,17 +69,21 @@ function stop() {
   system.status = '0';
 }
 
-function stopPlugin(plugin) {
+function stopPlugin(plugin, isInlinePlugin) {
   var status = getStatus(plugin);
   
   if (status.status) {
+    if (!isInlinePlugin) {
+      savePluginSwitch(plugin, false);
+    }
+    
     var pluginPath = getModulePath(plugin);
     
     try {
       //stop all plugins which require this one
       var inlinePlugins = Object.keys(status.plugins);
       inlinePlugins.forEach(function(inlinePlugin) {
-        stopPlugin(inlinePlugin);
+        stopPlugin(inlinePlugin, true);
       });
       
       var module = require(pathToPlugins + pluginPath);
@@ -190,6 +194,41 @@ function setProperties(pluginName, properties) {
   var dir = path.join(__dirname, configPath);
   
   return fs.write(dir, JSON.stringify(properties, null, 2));
+}
+
+function savePluginSwitch(pluginName, enabled) {
+  try {
+    var pathToConfig = pathToPlugins + 'config.json';
+    var config = require(pathToConfig);
+    
+    var pluginPath = findPluginPath(pluginName);
+     
+    var inlineConfig = config.plugins;
+    pluginPath.forEach(function(part) {
+      inlineConfig = findPluginInArray(inlineConfig, part);
+      if (pluginPath.indexOf(part) === pluginPath.length - 1) {
+        inlineConfig.enabled = enabled;
+      } else {
+        inlineConfig = inlineConfig.plugins;
+      }
+    });
+    console.log(JSON.stringify(config, null, 2));
+    var dir = path.join(__dirname, pathToConfig);
+    fs.write(dir, JSON.stringify(config, null, 2));
+  } catch(e) {
+    console.log(e);
+    console.log('Save of Plugin switch not possible');
+  }
+}
+
+function findPluginInArray(array, pluginName) {
+  var plugin;
+  array.forEach(function(item) {
+    if (item.name === pluginName) {
+      plugin = item;
+    }
+  });
+  return plugin;
 }
 
 module.exports = system;
