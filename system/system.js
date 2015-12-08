@@ -9,7 +9,7 @@ var pluginConfig = require(pathToPlugins + 'config.json');
 var system = {};
 system.start = start;
 system.stop = stop;
-system.stopPlugin = stopPlugin;
+system.switchPlugin = switchPlugin;
 system.getProperties = getProperties;
 system.setProperties = setProperties;
 
@@ -18,49 +18,45 @@ system.status = '0';
 system.pluginStatus = {};
 
 function start() {
-  loadPlugins(pluginConfig.plugins, pathToPlugins, exchange, system.pluginStatus, true);
+  loadPlugins(pluginConfig.plugins, exchange, system.pluginStatus, true);
   system.status = '1';
 }
 
-function loadPlugins(plugins, pluginsRootPath, exchange, pluginStatus, depLoaded) {
+function loadPlugins(plugins, exchange, pluginStati, depLoaded) {
   if (!plugins) {
     return;
   }
   
   plugins.forEach(function initialisePlugin(plugin) {
-    loadPlugin(pluginsRootPath, plugin, exchange, pluginStatus, depLoaded);
+    pluginStati[plugin.name] = {
+      status: false,
+      plugins: {}
+    };
+    loadPlugin(plugin, exchange, pluginStati[plugin.name], depLoaded);
   });
 }
 
-function loadPlugin(moduleRootPath, config, exchange, pluginStatus, depLoaded) {
+function loadPlugin(config, exchange, pluginStatus, depLoaded) {
   if (config.enabled && depLoaded) {
     console.log('Starting ' + config.name + ' ...');
     
-    pluginStatus[config.name] = {
-      status: false,
-      plugins: {}
-    };
     try {
-      var module = require(moduleRootPath + config.name);
+      var modulePath = pathToPlugins + getModulePath(config.name);
+      var module = require(modulePath);
       
       module.start(exchange);
       
-      pluginStatus[config.name].status = true;
+      pluginStatus.status = true;
       
-      var pluginsPath = moduleRootPath + config.name + '/plugins/';
-      loadPlugins(config.plugins, pluginsPath, exchange, pluginStatus[config.name].plugins, true);
+      loadPlugins(config.plugins, exchange, pluginStatus.plugins, true);
     } catch (e) {
       console.log('Could not load plugin: ' + config.name);
       console.log(e);
-      pluginStatus[config.name].status = false;
+      pluginStatus.status = false;
     }
   
   } else {
-    pluginStatus[config.name] = {
-      status: false,
-      plugins: {}
-    };
-    loadPlugins(config.plugins, pluginsPath, exchange, pluginStatus[config.name].plugins, false);
+    loadPlugins(config.plugins, exchange, pluginStatus.plugins, false);
   }
 }
 
@@ -150,9 +146,11 @@ function findPluginPathHelper(currentPlugin, name){
     return [currentPlugin.name];
   } else {
     var pathToReturn = [];
-    currentPlugin.plugins.forEach(function(plugin) {
-      calculatePathAndSaveIfExists(pathToReturn, plugin, name);
-    });
+    if (currentPlugin.plugins) {
+      currentPlugin.plugins.forEach(function(plugin) {
+        calculatePathAndSaveIfExists(pathToReturn, plugin, name);
+      });
+    }  
     return pathToReturn;
   }
 }
@@ -200,25 +198,30 @@ function savePluginSwitch(pluginName, enabled) {
   try {
     var pathToConfig = pathToPlugins + 'config.json';
     var config = require(pathToConfig);
-    
-    var pluginPath = findPluginPath(pluginName);
      
-    var inlineConfig = config.plugins;
-    pluginPath.forEach(function(part) {
-      inlineConfig = findPluginInArray(inlineConfig, part);
-      if (pluginPath.indexOf(part) === pluginPath.length - 1) {
-        inlineConfig.enabled = enabled;
-      } else {
-        inlineConfig = inlineConfig.plugins;
-      }
-    });
-    console.log(JSON.stringify(config, null, 2));
+    var inlineConfig = getConfigForPlugin(config, pluginName);
+    inlineConfig.enabled = enabled;
+    
     var dir = path.join(__dirname, pathToConfig);
     fs.write(dir, JSON.stringify(config, null, 2));
   } catch(e) {
     console.log(e);
     console.log('Save of Plugin switch not possible');
   }
+}
+
+function getConfigForPlugin(globalConfig, pluginName) {
+  var inlineConfig = globalConfig.plugins;
+  
+  var pluginPath = findPluginPath(pluginName);
+  pluginPath.forEach(function(part) {
+    inlineConfig = findPluginInArray(inlineConfig, part);
+    if (pluginPath.indexOf(part) !== pluginPath.length - 1) {
+      inlineConfig = inlineConfig.plugins;
+    }
+  });
+  
+  return inlineConfig;
 }
 
 function findPluginInArray(array, pluginName) {
@@ -229,6 +232,25 @@ function findPluginInArray(array, pluginName) {
     }
   });
   return plugin;
+}
+
+function startPlugin(pluginName) {
+  //check if already started
+  var currentStatus = getStatus(pluginName);
+  if (!currentStatus.status) {
+    var config = getConfigForPlugin(pluginConfig, pluginName);
+    config.enabled = true;
+    loadPlugin(config, exchange, currentStatus, true);
+  }
+}
+
+function switchPlugin(pluginName) {
+  var currentStatus = getStatus(pluginName).status;
+  if (currentStatus) {
+    stopPlugin(pluginName);
+  } else {
+    startPlugin(pluginName);
+  }
 }
 
 module.exports = system;

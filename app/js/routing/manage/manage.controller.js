@@ -22,7 +22,7 @@ function ManageController(PluginSystemService) {
   }
   
   function switchPlugin(name) {
-    PluginSystemService.startPlugin(name);
+    PluginSystemService.switchPlugin(name).then(init);
   }
   
   function collapseAll(plugins) {

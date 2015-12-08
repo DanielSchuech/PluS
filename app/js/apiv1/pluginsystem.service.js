@@ -9,7 +9,7 @@ function PluginSystemService($http) {
   this.start = start;
   this.stop = stop;
   this.getPlugins = getPlugins;
-  this.startPlugin = startPlugin;
+  this.switchPlugin = switchPlugin;
   this.getProperties = getProperties;
   this.setProperties = setProperties;
   
@@ -52,8 +52,8 @@ function PluginSystemService($http) {
     return array;
   }
   
-  function startPlugin(name) {
-    return $http.get('/plugin-system/stop-plugin/' + name);
+  function switchPlugin(name) {
+    return $http.get('/plugin-system/switch-plugin/' + name);
   }
   
   function getProperties(name) {
