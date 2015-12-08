@@ -1,5 +1,4 @@
 var express = require('express');
-var config = require('./config.json');
 
 var exp = {};
 exp.start = startServer;
@@ -8,7 +7,7 @@ module.exports = exp;
 
 var server;
 
-function startServer(exchange) {
+function startServer(exchange, config) {
   var app = express();
   
   app.get('/', function (req, res) {
@@ -16,7 +15,7 @@ function startServer(exchange) {
   });
    
   //TODO Port konfigurierbar gestalten 
-  server = app.listen(config.port);
+  server = app.listen(config.port);console.log('started on '+config.port)
   
   //TODO namen aus package JSON des Plugins auslesen
   exchange['express'] = {

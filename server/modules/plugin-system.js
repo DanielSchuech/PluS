@@ -42,6 +42,9 @@ function PluginSys(server, config, pluginSystem) {
     pluginSystem.setProperties(req.params.plugin, req.body.properties).then(success, failed);
     
     function success() {
+      //restart plugin
+      pluginSystem.restartPlugin(req.params.plugin);
+      
       res.sendStatus(200);
     }
     

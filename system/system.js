@@ -10,6 +10,7 @@ var system = {};
 system.start = start;
 system.stop = stop;
 system.switchPlugin = switchPlugin;
+system.restartPlugin = restartPlugin;
 system.getProperties = getProperties;
 system.setProperties = setProperties;
 
@@ -18,8 +19,24 @@ system.status = '0';
 system.pluginStatus = {};
 
 function start() {
+  loadPluginsConfigs(pluginConfig);
   loadPlugins(pluginConfig.plugins, exchange, system.pluginStatus, true);
   system.status = '1';
+}
+
+function loadPluginsConfigs(globalConfig) {
+  globalConfig.plugins.forEach(function(entry) {
+    var entryConfig = {};
+    try {
+      var entryModulePath = pathToPlugins + getModulePath(entry.name);
+      entryConfig = require(entryModulePath + '/config.json');
+    } catch(e) {}
+    entry.config = entryConfig;
+    
+    if (entry.plugins) {
+      loadPluginsConfigs(entry);
+    }
+  });
 }
 
 function loadPlugins(plugins, exchange, pluginStati, depLoaded) {
@@ -44,7 +61,7 @@ function loadPlugin(config, exchange, pluginStatus, depLoaded) {
       var modulePath = pathToPlugins + getModulePath(config.name);
       var module = require(modulePath);
       
-      module.start(exchange);
+      module.start(exchange, config.config);
       
       pluginStatus.status = true;
       
@@ -187,6 +204,11 @@ function getProperties(pluginName) {
 }
 
 function setProperties(pluginName, properties) {
+  //write to local config in pluginConfig
+  var localconfig = getConfigForPlugin(pluginConfig, pluginName);
+  localconfig.config = properties;
+  
+  //write to config file
   var pathInPlugin = findPluginPath(pluginName);
   var configPath = pathToPlugins + pathInPlugin + '/config.json';
   var dir = path.join(__dirname, configPath);
@@ -251,6 +273,14 @@ function switchPlugin(pluginName) {
   } else {
     startPlugin(pluginName);
   }
+}
+
+function restartPlugin(pluginName) {
+  var currentStatus = getStatus(pluginName);
+  if (currentStatus.status) {
+    stopPlugin(pluginName);
+    startPlugin(pluginName);
+  }  
 }
 
 module.exports = system;
