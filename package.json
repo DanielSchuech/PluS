@@ -91,7 +91,6 @@
     "express": "4.12.4",
     "express-session": "1.11.3",
     "forever-monitor": "1.6.0",
-    "lodash": "3.10.1",
     "mongoose": "4.1.9",
     "morgan": "1.5.3",
     "passport": "0.3.0",

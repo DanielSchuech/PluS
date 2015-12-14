@@ -15,6 +15,7 @@
       {"extension": "userModel", "file": "extensions/usermodel"},
       {"extension": "passport", "file": "extensions/passport"},
       {"extension": "passport-local", "file": "extensions/passport-local"},
+      {"extension": "depmanager", "file": "../system/depmanager"},
       {"extension": "plugin-system", "file": "../system"}
     ]
   },
@@ -31,5 +32,7 @@
   },
   "session": {
     "maxAge": 86400000
-  }
+  },
+  
+  "pluginPrefix": "PluS_"
 }
