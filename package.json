@@ -97,6 +97,10 @@
     "passport-local": "1.0.0",
     "q-io": "1.13.1",
     "tiny-di": "0.1.0",
-    "ui-router": "0.2.15"
+    "ui-router": "0.2.15",
+    
+    "PluS_express": "0.0.1",
+    "PluS_secondlevel": "0.0.1",
+    "PluS_testpage": "0.0.1"
   }
 }

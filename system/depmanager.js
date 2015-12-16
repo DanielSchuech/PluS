@@ -1,31 +1,44 @@
+'use strict';
+
 module.exports = DependencyManager;
 
 var exec = require('child_process').exec;
 var q = require('q');
 
 DependencyManager.$inject = ['config'];
-function DependencyManager(config) {console.log('b')
-  var vm = this;
-  vm.getPluginsAndDeps = searchForPlugins;
+function DependencyManager(config) {
+  var vm = {};
+  vm.initialise = initialise;
+  vm.isInitialised = isInitialised;
   
-  searchForPlugins();
+  vm.plugins = {};
   
-  function searchForPlugins() {console.log('start')
+  
+  var _isInitialised = false;
+  function isInitialised() {
+    return _isInitialised;
+  }
+  
+  function initialise() {
     var deffered = q.defer();
     var plugins = [];
     //Buffer max size: 5mb
-    var child = exec("npm ls --json", {maxBuffer: 1024 * 5000}, processNpmList);
+    var child = exec("npm ls --json --long", {maxBuffer: 1024 * 5000}, processNpmList);
     
-    function processNpmList(error, stdout, stderr) {console.log('a')
+    function processNpmList(error, stdout, stderr) {
       if (error || stderr) {
         return deffered.reject('Error on searching for plugins: '+ error + stderr);
       }
       plugins = JSON.parse(stdout).dependencies;
-      plugins = filterDependencies(plugins, "^ang");//"^" + config.pluginPrefix);
-      
-      console.log(JSON.stringify(plugins, null ,2))
+      plugins = filterDependencies(plugins, "^" + config.pluginPrefix);
+       
+      //console.log('test '+JSON.stringify(plugins, null ,2))
+      vm.plugins = plugins;
+      _isInitialised = true;
       deffered.resolve(plugins);
     }
+    
+    return deffered.promise;
   }
   
   function filterDependencies(json, regexString) {
@@ -44,4 +57,6 @@ function DependencyManager(config) {console.log('b')
     
     return returnJson;
   }
+  
+  return vm;
 }

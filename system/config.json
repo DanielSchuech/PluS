@@ -1,0 +1,7 @@
+{
+  "plugins": {
+    "PluS_express": true,
+    "PluS_testpage": true,
+    "PluS_secondlevel": true
+  }
+}
