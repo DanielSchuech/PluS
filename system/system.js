@@ -3,12 +3,18 @@
 module.exports = System;
 
 var fs = require("q-io/fs");
+var q = require('q');
 var path = require('path');
+var tiny = require('tiny-di');
 
 var config = require('./config');
+var ROOT = '../../../';
 
-System.$inject = ['depmanager'];
-function System(depManager) {console.log('a');
+var pluginConfigs = {};
+var $pluginInjector;
+
+System.$inject = ['depmanager', 'config'];
+function System(depManager, serverConfig) {
   var vm = {};
   vm.start = start;
   vm.stop = stop;
@@ -17,7 +23,6 @@ function System(depManager) {console.log('a');
   vm.getProperties = getProperties;
   vm.setProperties = setProperties;
   
-  var exchange = {}; 
   vm.status = '0';
   vm.pluginStatus = {};
   
@@ -26,8 +31,13 @@ function System(depManager) {console.log('a');
   return vm; 
   
   function start() {
+    $pluginInjector = new tiny();
+    $pluginInjector.bind('$pluginInjector').to($pluginInjector);
+    $pluginInjector.setResolver(dependencyResolver);
+  
     console.log('Starting plugins........');
-    loadPlugins();
+    loadPluginsConfigs()
+        .then(loadPlugins);
     
     //loadPluginsConfigs(pluginConfig);
     //loadPlugins(pluginConfig.plugins, exchange, system.pluginStatus, true);
@@ -43,7 +53,7 @@ function System(depManager) {console.log('a');
     
     function depInitialisedLoadPlugins() {
       var keys = Object.keys(depManager.plugins);
-      keys.forEach(function(plugin) {console.log('begin '+plugin)
+      keys.forEach(function(plugin) {
         vm.pluginStatus[plugin] = loadPlugin(plugin);
       });
     }
@@ -52,14 +62,20 @@ function System(depManager) {console.log('a');
   function loadPlugin(plugin) {
     //check if enabled
     if (config.plugins[plugin]) {
-      var depsLoaded = loadDeps(depManager.plugins[plugin]);
+      var depsLoaded = loadDeps(depManager.plugins[plugin].dependencies);
+      if (!depsLoaded) {
+        //dependencies not load -> cant start plugin
+        console.log('deps coudnt be loaded for ' + plugin);
+        return false;
+      }
       
       console.log('Starting ' + plugin + ' ...');
       
       try {
-        var module = require(plugin);
+        /*var module = require(plugin);*/
+        var module = $pluginInjector.bind(plugin).load(plugin);
         
-        module.start(exchange, config.config);
+        module.start(pluginConfigs[plugin]);
         
         return true;
         
@@ -80,9 +96,14 @@ function System(depManager) {console.log('a');
     var allPluginsLoaded = true;
     var keys = Object.keys(dependencies);
     keys.forEach(function(key) {
-      if (!vm.pluginStatus[key]) {
+      if (vm.pluginStatus[key] === undefined) {
         var keyLoaded = loadPlugin(key);
         if (!keyLoaded) {
+          allPluginsLoaded = false;
+        }
+      } else {
+        // plugin has already tried to start
+        if (!vm.pluginStatus[key]) {
           allPluginsLoaded = false;
         }
       }
@@ -90,60 +111,34 @@ function System(depManager) {console.log('a');
     return allPluginsLoaded;
   }
   
-  //---------------------------------------------------------------OLD CODE -----------------------------------------------------------------------
-  function loadPluginsConfigs(globalConfig) {
-    globalConfig.plugins.forEach(function(entry) {
-      var entryConfig = {};
-      try {
-        var entryModulePath = pathToPlugins + getModulePath(entry.name);
-        entryConfig = require(entryModulePath + '/config.json');
-      } catch(e) {}
-      entry.config = entryConfig;
-      
-      if (entry.plugins) {
-        loadPluginsConfigs(entry);
-      }
-    });
-  }
-  
-  function _loadPlugins(plugins, exchange, pluginStati, depLoaded) {
-    if (!plugins) {
-      return;
-    }
-    
-    plugins.forEach(function initialisePlugin(plugin) {
-      pluginStati[plugin.name] = {
-        status: false,
-        plugins: {}
-      };
-      loadPlugin(plugin, exchange, pluginStati[plugin.name], depLoaded);
-    });
-  }
-  
-  function _loadPlugin(config, exchange, pluginStatus, depLoaded) {
-    if (config.enabled && depLoaded) {
-      console.log('Starting ' + config.name + ' ...');
-      
-      try {
-        var modulePath = pathToPlugins + getModulePath(config.name);
-        var module = require(modulePath);
-        
-        module.start(exchange, config.config);
-        
-        pluginStatus.status = true;
-        
-        loadPlugins(config.plugins, exchange, pluginStatus.plugins, true);
-      } catch (e) {
-        console.log('Could not load plugin: ' + config.name);
-        console.log(e);
-        pluginStatus.status = false;
-      }
-    
+  function loadPluginsConfigs() {
+    if (!depManager.isInitialised()) {
+      return depManager.initialise().then(loadConfigsForPlugins);
     } else {
-      loadPlugins(config.plugins, exchange, pluginStatus.plugins, false);
+      return loadConfigsForPlugins();
+    }
+    
+    function loadConfigsForPlugins() {
+      var deffered = q.defer();
+      var plugins = depManager.plugins;
+      var keys = Object.keys(plugins);
+      
+      keys.forEach(function(plugin) {
+        var pluginConfig = {};
+        try {
+          var pluginPath = ROOT + 'node_modules/' + plugin;
+          pluginConfig = require(pluginPath + '/config.json');
+        } catch(e) {
+          console.log('------------ No Config File for ' + plugin);
+        }
+        pluginConfigs[plugin] = pluginConfig;
+      });
+      deffered.resolve(pluginConfigs);
+      return deffered.promise;
     }
   }
   
+  //---------------------------------------------------------------OLD CODE -----------------------------------------------------------------------
   function stop() {
     pluginConfig.plugins.forEach(stopPlugin);  
     system.status = '0';
@@ -348,5 +343,22 @@ function System(depManager) {console.log('a');
       stopPlugin(pluginName);
       startPlugin(pluginName);
     }  
+  }
+  
+  function dependencyResolver(moduleId) {
+    var modulePath = path.resolve(path.join(serverConfig.dist.root, serverConfig.server.path, moduleId));
+    try {
+      return require(modulePath);
+    } catch (e) {
+      try {
+        return require(moduleId);
+      } catch (e2) {
+        console.log('Plugin ' + moduleId + ' failed to load');
+        console.log(modulePath);
+        console.log('errors', e, e2);
+        console.log(new Error().stack);
+        return false;
+      }
+    }
   }
 }
