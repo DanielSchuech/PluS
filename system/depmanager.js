@@ -22,11 +22,12 @@ function DependencyManager(config) {
   function initialise() {
     var deffered = q.defer();
     var plugins = [];
-    //Buffer max size: 5mb
-    var child = exec("npm ls --json --long", {maxBuffer: 1024 * 5000}, processNpmList);
+    //Buffer max size: 10mb
+    var child = exec("npm ls --json --long", {maxBuffer: 1024 * 10000}, processNpmList);
     
     function processNpmList(error, stdout, stderr) {
       if (error || stderr) {
+        console.log('Error on searching for plugins: '+ error + stderr);
         return deffered.reject('Error on searching for plugins: '+ error + stderr);
       }
       plugins = JSON.parse(stdout).dependencies;

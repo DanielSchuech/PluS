@@ -9,4 +9,5 @@ gulp.task('watch', function () {
   gulp.watch(config.views.watch, ['views']);
   gulp.watch(config.translations.src, ['translations']);
   gulp.watch(config.pluginSystem.src,  ['server:restart']);
+  gulp.watch('node_modules/PluS*/*',  ['server:restart']);
 });

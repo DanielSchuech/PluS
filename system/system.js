@@ -33,6 +33,7 @@ function System(depManager, serverConfig) {
   function start() {
     $pluginInjector = new tiny();
     $pluginInjector.bind('$pluginInjector').to($pluginInjector);
+    $pluginInjector.bind('pluginStatus').to(vm.pluginStatus);
     $pluginInjector.setResolver(dependencyResolver);
   
     console.log('Starting plugins........');
@@ -135,6 +136,44 @@ function System(depManager, serverConfig) {
       });
       deffered.resolve(pluginConfigs);
       return deffered.promise;
+    }
+  }
+  
+  function dependencyResolver(moduleId) {
+    var modulePath = path.resolve(path.join(serverConfig.dist.root, serverConfig.server.path, moduleId));
+    try {
+      return require(modulePath);
+    } catch (e) {
+      try {
+        var module = require(moduleId);
+        
+        //classes from es6, typescript require new operator
+        if (module.__esModule) {
+          var injects = [];
+          module.default.$inject && module.default.$inject.forEach(function(dep) {
+            injects.push($pluginInjector.get(dep));
+          });
+          
+          var argsMaxLength = 10;
+          for(var i = injects.length; i < argsMaxLength; i++) {
+            injects.push(undefined);
+          }
+          
+          return new module.default(injects[0], injects[1], injects[2], injects[3], injects[4],
+            injects[5], injects[6], injects[7], injects[8], injects[9]);
+          //spread operator combined with new currently not supported by node
+          //return new t.default(...injects);
+        }
+        
+        //default
+        return require(moduleId);
+      } catch (e2) {
+        console.log('Plugin ' + moduleId + ' failed to load');
+        console.log(modulePath);
+        console.log('errors', e, e2);
+        console.log(new Error().stack);
+        return false;
+      }
     }
   }
   
@@ -345,20 +384,4 @@ function System(depManager, serverConfig) {
     }  
   }
   
-  function dependencyResolver(moduleId) {
-    var modulePath = path.resolve(path.join(serverConfig.dist.root, serverConfig.server.path, moduleId));
-    try {
-      return require(modulePath);
-    } catch (e) {
-      try {
-        return require(moduleId);
-      } catch (e2) {
-        console.log('Plugin ' + moduleId + ' failed to load');
-        console.log(modulePath);
-        console.log('errors', e, e2);
-        console.log(new Error().stack);
-        return false;
-      }
-    }
-  }
 }
