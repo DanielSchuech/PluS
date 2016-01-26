@@ -3,6 +3,9 @@
     "PluS_express": true,
     "PluS_testpage": true,
     "PluS_secondlevel": true,
-    "PluS_wrapper": true
+    "PluS_wrapper": true,
+    "PluS_pagerouter": true,
+    "PluS_pageone": true,
+    "PluS_pagetwo": true
   }
 }

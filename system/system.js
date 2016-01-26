@@ -53,6 +53,8 @@ function System(depManager, serverConfig) {
     }
     
     function depInitialisedLoadPlugins() {
+      $pluginInjector.bind('PluginInfo').to(depManager.plugins);
+      
       var keys = Object.keys(depManager.plugins);
       keys.forEach(function(plugin) {
         vm.pluginStatus[plugin] = loadPlugin(plugin);
@@ -75,6 +77,11 @@ function System(depManager, serverConfig) {
       try {
         /*var module = require(plugin);*/
         var module = $pluginInjector.bind(plugin).load(plugin);
+        
+        // frontend plugin return false
+        if (!module) {
+          return true;
+        }
         
         module.start(pluginConfigs[plugin]);
         
@@ -156,9 +163,9 @@ function System(depManager, serverConfig) {
         return module;
       } catch (e2) {
         console.log('Plugin ' + moduleId + ' failed to load');
-        console.log(modulePath);
+        /*console.log(modulePath);
         console.log('errors', e, e2);
-        console.log(new Error().stack);
+        console.log(new Error().stack);*/
         return false;
       }
     }

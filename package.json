@@ -102,6 +102,9 @@
     "PluS_express": "0.0.1",
     "PluS_secondlevel": "0.0.1",
     "PluS_testpage": "0.0.1",
-    "PluS_wrapper": "0.0.1"
+    "PluS_wrapper": "0.0.1",
+    "PluS_pagerouter": "0.0.1",
+    "PluS_pageone": "0.0.1",
+    "PluS_pagetwo": "0.0.1"
   }
 }
